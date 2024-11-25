@@ -1,0 +1,22 @@
+{
+  "name": "deploy-on-validium",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "deploy": "hardhat deploy-zksync --script deploy.ts",
+    "interact": "hardhat deploy-zksync --script interact.ts",
+    "compile": "hardhat compile"
+  },
+  "devDependencies": {
+    "@matterlabs/hardhat-zksync": "^1.1.0",
+    "dotenv": "^16.4.5",
+    "ethers": "^6.13.2",
+    "hardhat": "^2.22.7",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.4",
+    "zksync-ethers": "^6.11.0"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
