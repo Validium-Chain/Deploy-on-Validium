@@ -1,42 +1,46 @@
-import { HardhatUserConfig } from "hardhat/config";
 import dotenv from "dotenv";
 
+import { HardhatUserConfig } from "hardhat/config";
 import "@matterlabs/hardhat-zksync";
+
+import chain from "./configs/chain.json";
 
 dotenv.config();
 
 const { WALLET_PRIVATE_KEY = "", INFURA_API_KEY = "" } = process.env;
-const VALIDIUM_DEVNET = "Validium Devnet";
-const NETWORK_RPC_URLS = {
-  sepolia: `https://sepolia.infura.io/v3/${INFURA_API_KEY}`,
-  holesky: `https://holesky.infura.io/v3/${INFURA_API_KEY}`,
-  [VALIDIUM_DEVNET]: `https://devnet.l2.rpc.validium.network`,
-};
+const VALIDIUM_DEVNET = chain[0];
+const HOODI_RPC_URL = `https://hoodi.infura.io/v3/${INFURA_API_KEY}`;
+
+const { name: networkName, rpcUrls } = VALIDIUM_DEVNET;
+const VALIDIUM_RPC_URL = rpcUrls.default.http[0];
 
 const config: HardhatUserConfig = {
-  defaultNetwork: VALIDIUM_DEVNET,
-
+  defaultNetwork: networkName,
   zksolc: {
-    version: "latest",
+    version: "1.5.12",
     compilerSource: "binary",
-    settings: {},
+    settings: {
+      optimizer: {
+        enabled: true,
+        mode: "3",
+        fallback_to_optimizing_for_size: true,
+      },
+      codegen: "evmla",
+    },
   },
   networks: {
-    sepolia: {
-      url: NETWORK_RPC_URLS.sepolia,
+    hoodi: {
+      url: HOODI_RPC_URL,
     },
-    holesky: {
-      url: NETWORK_RPC_URLS.holesky,
-    },
-    [VALIDIUM_DEVNET]: {
-      url: NETWORK_RPC_URLS[VALIDIUM_DEVNET], // L2 network RPC URL
-      ethNetwork: "holesky", // Underlying Ethereum network RPC
+    [networkName]: {
+      url: VALIDIUM_RPC_URL, // L2 network RPC URL
+      ethNetwork: "hoodi", // Underlying Ethereum network RPC
       zksync: true, // Indicates this is a zkSync network
       accounts: [WALLET_PRIVATE_KEY],
     },
   },
   solidity: {
-    version: "0.8.17",
+    version: "0.8.24",
   },
 };
 

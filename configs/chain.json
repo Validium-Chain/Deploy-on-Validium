@@ -1,0 +1,21 @@
+[
+  {
+    "id": 567,
+    "key": "validium-testnet",
+    "name": "Validium Testnet",
+    "rpcUrls": {
+      "default": { "http": ["https://testnet.l2.rpc.validium.network"] }
+    },
+    "nativeCurrency": {
+      "name": "VLDM",
+      "symbol": "VLDM",
+      "decimals": 18
+    },
+    "blockExplorers": {
+      "default": {
+        "name": "Validium Block Explorer",
+        "url": "https://testnet.explorer.validium.network"
+      }
+    }
+  }
+]

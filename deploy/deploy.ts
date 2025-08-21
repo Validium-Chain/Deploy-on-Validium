@@ -1,7 +1,13 @@
 import * as hre from "hardhat";
 import { Deployer } from "@matterlabs/hardhat-zksync";
-import { getWallet, verifyContract, verifyEnoughBalance } from "./utils";
 import { ethers } from "ethers";
+
+import {
+  getExplorerUrl,
+  getWallet,
+  verifyContract,
+  verifyEnoughBalance,
+} from "./utils";
 
 const deployContract = async (
   contractArtifactName: string,
@@ -43,15 +49,14 @@ const deployContract = async (
   const address = await contract.getAddress();
   const constructorArgs = contract.interface.encodeDeploy(constructorArguments);
   const fullContractSource = `${artifact.sourceName}:${artifact.contractName}`;
+  const explorerUrl = getExplorerUrl(address);
 
   // Display contract deployment info
   console.log(`\n"${artifact.contractName}" was successfully deployed 🎉:`);
   console.log(` - Contract address: ${address}`);
   console.log(` - Contract source: ${fullContractSource}`);
   console.log(` - Encoded constructor arguments: ${constructorArgs}\n`);
-  console.log(
-    ` - See on Validium Block Explorer: https://devnet.explorer.validium.network/address/${address}\n`
-  );
+  console.log(` - See on Validium Block Explorer: ${explorerUrl}\n`);
 
   if (hre.network.config.verifyURL) {
     console.log(`Requesting contract verification...`);

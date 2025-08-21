@@ -1,9 +1,11 @@
+import dotenv from "dotenv";
 import * as hre from "hardhat";
 import { Provider, Wallet } from "zksync-ethers";
-import dotenv from "dotenv";
 import { ethers } from "ethers";
 
 import "@matterlabs/hardhat-zksync-node/dist/type-extensions";
+
+import chain from "../configs/chain.json";
 
 // Load env file
 dotenv.config();
@@ -60,3 +62,16 @@ export const verifyContract = async (data: {
   });
   return verificationRequestId;
 };
+
+export const getExplorerUrl = (address: string) => {
+  return `${chain[0].blockExplorers.default.url}/address/${address}`;
+};
+
+// TODO: update README.md file, make sure all the links are working and points to testnet resources.
+// TODO: update it like this: to interact, user need to provide the contract address through the cli or some json file
+// TODO: add colorfull cli responses
+/**
+ * refer these-
+ * https://docs.zksync.io/zksync-era/tooling/hardhat/plugins/hardhat-zksync
+ * https://docs.zksync.io/zksync-era/tooling/hardhat/plugins/hardhat-zksync-ethers
+ */

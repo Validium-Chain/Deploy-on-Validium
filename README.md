@@ -28,8 +28,8 @@ npm run interact
 
 ## Important Links
 
-[Block Explorer](https://devnet.explorer.validium.network)
+[Block Explorer](https://testnet.explorer.validium.network)
 [Documentation](https://validium.gitbook.io/docs)
 [Add Validium Network](https://validium.gitbook.io/docs/connect-to-validium)
-[Faucet](https://devnet.faucet.validium.network/)
+[Faucet](https://testnet.faucet.validium.network/)
 [Whitepaper](https://docsend.com/view/5c85m6dfy3v4rren)
