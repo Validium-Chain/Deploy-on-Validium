@@ -1,6 +1,9 @@
 import * as hre from "hardhat";
 import { Deployer } from "@matterlabs/hardhat-zksync";
 import { ethers } from "ethers";
+import prompts from "prompts";
+import fs from "fs";
+import path from "path";
 
 import {
   getExplorerUrl,
@@ -11,7 +14,7 @@ import {
 
 const deployContract = async (
   contractArtifactName: string,
-  constructorArguments?: any[]
+  constructorArguments?: unknown[]
 ) => {
   console.log(`\nStarting deployment process of "${contractArtifactName}"...`);
 
@@ -48,7 +51,7 @@ const deployContract = async (
   const contract = await deployer.deploy(artifact, constructorArguments);
   const address = await contract.getAddress();
   const constructorArgs = contract.interface.encodeDeploy(constructorArguments);
-  const fullContractSource = `${artifact.sourceName}:${artifact.contractName}`;
+  const fullContractSource = `artifacts-zk/${artifact.sourceName}:${artifact.contractName}`;
   const explorerUrl = getExplorerUrl(address);
 
   // Display contract deployment info
@@ -72,7 +75,54 @@ const deployContract = async (
 };
 
 export default async function () {
-  const contractArtifactName = "Counter";
-  const constructorArguments: any[] | undefined = [];
-  await deployContract(contractArtifactName, constructorArguments);
+  const artifactsPath = path.join(
+    __dirname,
+    "..",
+    "artifacts-zk",
+    "contracts"
+  );
+
+  if (!fs.existsSync(artifactsPath)) {
+    console.error(
+      "⛔️ Error: 'artifacts-zk/contracts' directory not found. Please compile your contracts first."
+    );
+    process.exit(1);
+  }
+
+  const contractFiles = fs
+    .readdirSync(artifactsPath)
+    .filter((file) => file.endsWith(".sol"));
+
+  if (contractFiles.length === 0) {
+    console.error(
+      "⛔️ Error: No compiled contract files found in 'artifacts-zk/contracts'. Please compile your contracts first."
+    );
+    process.exit(1);
+  }
+
+  const choices = contractFiles.map((file) => ({
+    title: file,
+    value: path.basename(file, ".sol"),
+  }));
+
+  const response = await prompts([
+    {
+      type: "select",
+      name: "contractName",
+      message: "Select a compiled contract to deploy:",
+      choices,
+    },
+    {
+      type: "text",
+      name: "constructorArgs",
+      message: "Enter the constructor arguments separated by commas (if any):",
+    },
+  ]);
+
+  const { contractName, constructorArgs } = response;
+  const constructorArguments = constructorArgs
+    ? constructorArgs.split(",").map((arg:string) => arg.trim())
+    : [];
+
+  await deployContract(contractName, constructorArguments);
 }

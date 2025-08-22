@@ -24,6 +24,11 @@ contract Counter {
         emit CountUpdated(count);
     }
 
+    function addToCount(uint256 _value) public {
+        count += _value;
+        emit CountUpdated(count);
+    }
+
     function getCount() public view returns (uint256) {
         return count;
     }
